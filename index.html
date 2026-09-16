@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="OJ Haldus pakub kinnisvarahaldust, hooldus-, heakorra-, haljastus- ja maastikuehitusteenuseid." />
+  <title>OJ Haldus | Kinnisvara ja haljastus</title>
+  <style>
+    :root {
+      --ink: #30363b;
+      --muted: #687278;
+      --green: #3b873a;
+      --green-dark: #276b2d;
+      --mint: #f4f8f3;
+      --line: #e5e9e7;
+      --warm: #fafbfa;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      overflow: hidden;
+      background: linear-gradient(180deg,
+          #fff 0%,
+          #fff 76%,
+          var(--warm) 100%);
+    }
+
+    .wrap {
+      width: min(960px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      animation: rise 0.7s ease both;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font:
+        700 1rem/1 -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      color: var(--green);
+    }
+
+    .nav {
+      display: flex;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .nav a {
+      transition: color 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: var(--green);
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 48px;
+      align-items: center;
+      min-height: 420px;
+      padding: 54px 0 58px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero::before {
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      left: -100vw;
+      width: 200vw;
+      height: 100%;
+      border-bottom: 1px solid var(--line);
+      background: var(--warm);
+      content: "";
+    }
+
+    .hero-copy,
+    .hero-art {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 17px;
+      color: var(--green);
+      font:
+        700 0.7rem -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 18px;
+      height: 2px;
+      background: var(--green);
+      content: "";
+    }
+
+    h1 {
+      max-width: 680px;
+      margin: 0;
+      font-size: clamp(2.7rem, 6vw, 4.5rem);
+      font-weight: 650;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .lead {
+      max-width: 510px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 25px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 13px;
+      border: 1px solid var(--green);
+      border-radius: 2px;
+      font:
+        600 0.78rem -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      color: var(--white);
+      background: var(--green);
+    }
+
+    .button.primary:hover {
+      background: var(--green-dark);
+    }
+
+    .button.secondary {
+      color: var(--green-dark);
+      background: transparent;
+    }
+
+    .button.secondary:hover {
+      color: var(--white);
+      background: var(--green);
+    }
+
+    .services-section {
+      padding: 45px 0 62px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      font-weight: 650;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+    }
+
+    .section-note {
+      max-width: 290px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .service {
+      min-height: 190px;
+      padding: 20px 21px 19px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      transition: background 0.2s ease;
+    }
+
+    .service:hover {
+      position: relative;
+      z-index: 1;
+      background: var(--mint);
+    }
+
+    .service-icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 12px;
+      color: var(--green);
+    }
+
+    h3 {
+      margin: 0 0 7px;
+      font-size: 1.05rem;
+      font-weight: 650;
+      line-height: 1.2;
+    }
+
+    .service p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+      padding: 34px 0 42px;
+      border-top: 1px solid var(--line);
+    }
+
+    .contact h2 {
+      max-width: 420px;
+    }
+
+    .contact-copy {
+      margin: 17px 0 0;
+      color: var(--muted);
+    }
+
+    .contact-details {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .contact-link:hover {
+      color: var(--green);
+    }
+
+    .contact-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--green);
+    }
+
+    .company-details {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .company-detail {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .company-icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      color: var(--green);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font:
+        0.68rem -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float-in {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .wrap {
+        width: min(100% - 32px, 560px);
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        min-height: auto;
+        padding: 55px 0 78px;
+      }
+
+      .hero::before {
+        left: -45vw;
+        width: 120vw;
+        height: 400px;
+      }
+
+      h1 {
+        font-size: clamp(3.6rem, 18vw, 6rem);
+      }
+
+      .services {
+        grid-template-columns: 1fr;
+      }
+
+      .service {
+        min-height: auto;
+      }
+
+      .section-heading,
+      .contact {
+        display: block;
+      }
+
+      .section-note {
+        margin-top: 16px;
+      }
+
+      .contact-details {
+        margin-top: 30px;
+      }
+
+      footer {
+        display: block;
+        line-height: 1.8;
+      }
+
+      footer span {
+        display: block;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="wrap">
+      <header class="topbar">
+        <a class="brand" href="#avaleht" aria-label="OJ Haldus avaleht">
+          OJ Haldus OÜ
+        </a>
+        <nav class="nav" aria-label="Peamenüü">
+          <a href="#teenused">Teenused</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+      </header>
+
+      <main id="avaleht">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow">Kinnisvara · loodus · korrashoid</p>
+            <h1 id="hero-title">OJ Haldus</h1>
+            <p class="lead">
+              Hoolitseme selle eest, et kinnisvara, hoovid ja haljasalad
+              oleksid hoitud, toimivad ja esinduslikud igal aastaajal.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#kontakt">Võta ühendust <span aria-hidden="true">↗</span></a>
+              <a class="button secondary" href="#teenused">Meie teenused</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="services-section" id="teenused" aria-labelledby="services-title">
+          <div class="section-heading">
+            <h2 id="services-title">Teenused</h2>
+            <p class="section-note">
+              Praktiline partner omanikele, üürnikele ja ettevõtetele
+            </p>
+          </div>
+          <div class="services">
+            <article class="service">
+              <svg class="service-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <path d="M7 34V9l13-4 13 4v25M4 34h32M13 15h4m6 0h4m-14 7h4m6 0h4M18 34V27h5v7" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <h3>Kinnisvarahaldus</h3>
+              <p>
+                Suhtlus omanike, üürnike ja klientidega; hooldus- ja
+                remonditööde tellimine; lepingute haldamine;
+                kommunaalkulude arvestus
+              </p>
+            </article>
+            <article class="service">
+              <svg class="service-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <path d="M6 31h28M9 31V16l11-8 11 8v15M14 20h12M14 25h12" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M20 8V4M17 5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <h3>Kinnisvara hooldus</h3>
+              <p>
+                Tehnosüsteemide hooldus; katuste ja vihmaveesüsteemide puhastamine; hoonete regulaarne ülevaatus
+              </p>
+            </article>
+            <article class="service">
+              <svg class="service-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <path d="M5 31h30M10 31l3-14h14l3 14M16 17l4-8 4 8M20 9V5M20 5l4 2" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m8 12 3 2m21-2-3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <h3>Heakorrateenused</h3>
+              <p>
+                Territooriumi puhastamine; lumekoristus; libedusetõrje; survepesu
+              </p>
+            </article>
+            <article class="service">
+              <svg class="service-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <path
+                  d="M20 34V8M20 18c-8-9-15-3-15-3 4 8 9 9 15 7m0 4c8-9 15-3 15-3-4 8-9 9-15 7M20 11c-5-7-11-2-11-2 3 6 7 7 11 5m0 20h-8m8 0h8"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <h3>Haljastusteenused</h3>
+              <p>
+                Muru niitmine; trimmerdamine; hekkide pügamine; puude ja põõsaste hooldus; haljasalade hooldus; istutustööd; multšimine; haljasalade hooajaline korrashoid
+              </p>
+            </article>
+            <article class="service">
+              <svg class="service-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                <path d="M5 33h30M8 33l8-12 5 6 5-10 6 16M9 18c4-7 10-9 16-6M25 8l3-3m-2 6 5-1" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8 33h24" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+              </svg>
+              <h3>Maastikuehitus</h3>
+              <p>
+                Haljasalade rajamine; pinnasetööd; kaevetööd; teede rekonstrueerimine ja ehitus
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="contact" id="kontakt" aria-labelledby="contact-title">
+          <div>
+            <p class="eyebrow">Räägime läbi</p>
+            <h2 id="contact-title">Hea haldus algab heast kontaktist</h2>
+            <p class="contact-copy">
+              Kirjelda oma vajadust ja leiame sobiva lahenduse
+            </p>
+          </div>
+          <div class="contact-details">
+            <a class="contact-link" href="mailto:info@ojhaldus.ee"><svg class="contact-icon" viewBox="0 0 24 24"
+                fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="1" stroke="currentColor" stroke-width="1.8" />
+                <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>info@ojhaldus.ee</a>
+            <a class="contact-link" href="tel:+37253632132"><svg class="contact-icon" viewBox="0 0 24 24" fill="none"
+                aria-hidden="true">
+                <path d="M7 4h3l2 5-2 2c1 2 3 3 5 4l2-2 4 2v3c0 1-1 2-2 2C11 20 4 13 4 6c0-1 1-2 3-2Z"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>+372 53632132</a>
+
+            <div class="company-details" aria-label="Ettevõtte andmed">
+              <div class="company-detail">
+                <svg class="company-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 20V6l7-3 7 3v14M3 20h18M8 9h2m4 0h2m-8 4h2m4 0h2M10 20v-4h4v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Registrikood: 14572834</span>
+              </div>
+              <div class="company-detail">
+                <svg class="company-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="1.5" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M3 9h18M7 14h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
+                <span>Arveldusarve: EE123456789012345678</span>
+              </div>
+              <div class="company-detail">
+                <svg class="company-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 21s7-4.6 7-11A7 7 0 0 0 5 10c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                  <circle cx="12" cy="10" r="2.2" stroke="currentColor" stroke-width="1.7" />
+                </svg>
+                <span>OJ Haldus OÜ</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>OJ Haldus OÜ</span>
+        <span>Kinnisvarahaldus ja maastikuehitus</span>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>
